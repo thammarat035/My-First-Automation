@@ -2,8 +2,8 @@ import pytest
 from selenium import webdriver
 from login_page import LoginPage
 import time
+import os
 
-# ข้อมูลทดสอบ 10 ชุดเหมือนเดิม
 test_data = [
     ("tomsmith", "SuperSecretPassword!", "Pass"),
     ("user_1", "pass_1", "Fail"),
@@ -14,11 +14,14 @@ test_data = [
     ("guest", "guest", "Fail"),
     ("robot_tester", "bot123", "Fail"),
     ("testing_only", "999999", "Fail"),
-    ("tomsmith", "wrongpassword", "Fail")
+    ("tomsmith", "wrongpassword", "Pass") # แกล้งให้พังตรงนี้ (รหัสผิดแต่บอกว่า Pass)
 ]
 
 @pytest.mark.parametrize("username, password, expected", test_data)
 def test_login_process(username, password, expected):
+    if not os.path.exists("screenshots"):
+        os.makedirs("screenshots")
+
     driver = webdriver.Chrome()
     login = LoginPage(driver)
     
@@ -30,10 +33,16 @@ def test_login_process(username, password, expected):
         time.sleep(1)
 
         current_url = driver.current_url
-        if "secure" in current_url:
-            assert expected == "Pass", f"ควรจะ Login พังแต่ดันผ่านสำหรับ user: {username}"
-        else:
-            assert expected == "Fail", f"ควรจะ Login ผ่านแต่ดันพังสำหรับ user: {username}"
+        actual_result = "Pass" if "secure" in current_url else "Fail"
+
+        # ถ้าผลไม่ตรงตามคาด ให้ถ่ายรูป
+        if actual_result != expected:
+            screenshot_path = f"screenshots/fail_{username}.png"
+            driver.save_screenshot(screenshot_path)
+            print(f"Captured: {screenshot_path}")
+
+        # เช็ค Assert เพื่อให้ Pytest รู้ว่าเคสนี้พัง
+        assert actual_result == expected, f"Expected {expected} but got {actual_result}"
             
     finally:
         driver.quit()
