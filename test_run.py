@@ -3,7 +3,9 @@ from selenium import webdriver
 from login_page import LoginPage
 import time
 import os
+import json # เพิ่มการอ่านไฟล์ JSON
 
+# ข้อมูลทดสอบ 10 ชุด
 test_data = [
     ("tomsmith", "SuperSecretPassword!", "Pass"),
     ("user_1", "pass_1", "Fail"),
@@ -14,19 +16,33 @@ test_data = [
     ("guest", "guest", "Fail"),
     ("robot_tester", "bot123", "Fail"),
     ("testing_only", "999999", "Fail"),
-    ("tomsmith", "wrongpassword", "Pass") # แกล้งให้พังตรงนี้ (รหัสผิดแต่บอกว่า Pass)
+    ("tomsmith", "wrongpassword", "Pass") # แกล้งให้พัง 1 เคสเพื่อดูรูป
 ]
 
 @pytest.mark.parametrize("username, password, expected", test_data)
 def test_login_process(username, password, expected):
+    # 1. อ่านค่าการตั้งค่าจากไฟล์ config.json
+    with open('config.json') as f:
+        config = json.load(f)
+
+    # 2. เตรียมโฟลเดอร์เก็บรูป
     if not os.path.exists("screenshots"):
         os.makedirs("screenshots")
 
-    driver = webdriver.Chrome()
+    # 3. เลือก Browser ตามที่ระบุใน Config
+    if config['browser'] == "chrome":
+        driver = webdriver.Chrome()
+    else:
+        # ถ้าในอนาคตอยากเพิ่ม Edge หรือ Firefox ก็มาใส่ตรงนี้ได้
+        driver = webdriver.Chrome() 
+
     login = LoginPage(driver)
     
     try:
-        driver.get("https://the-internet.herokuapp.com/login")
+        # 4. ดึง URL จาก Config
+        driver.get(config['base_url'])
+        driver.implicitly_wait(config['timeout'])
+        
         login.enter_username(username)
         login.enter_password(password)
         login.click_login()
@@ -35,14 +51,13 @@ def test_login_process(username, password, expected):
         current_url = driver.current_url
         actual_result = "Pass" if "secure" in current_url else "Fail"
 
-        # ถ้าผลไม่ตรงตามคาด ให้ถ่ายรูป
+        # 5. ถ้าเทสพัง ให้ถ่ายรูป
         if actual_result != expected:
             screenshot_path = f"screenshots/fail_{username}.png"
             driver.save_screenshot(screenshot_path)
             print(f"Captured: {screenshot_path}")
 
-        # เช็ค Assert เพื่อให้ Pytest รู้ว่าเคสนี้พัง
-        assert actual_result == expected, f"Expected {expected} but got {actual_result}"
+        assert actual_result == expected
             
     finally:
         driver.quit()
