@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 class LoginPage:
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(self.driver, 10)
+        self.wait = WebDriverWait(self.driver, 10) # รอสูงสุด 10 วินาที
         
         self.username_field = (By.ID, "username")
         self.password_field = (By.ID, "password")

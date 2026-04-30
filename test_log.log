@@ -1,0 +1,30 @@
+2026-04-30 19:53:06,337 - INFO - --- เริ่มทดสอบ User: tomsmith ---
+2026-04-30 19:53:07,337 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:53:11,980 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Pass)
+2026-04-30 19:53:14,072 - INFO - --- เริ่มทดสอบ User: wrong_user_1 ---
+2026-04-30 19:53:15,088 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:53:19,639 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Fail)
+2026-04-30 19:53:21,727 - INFO - --- เริ่มทดสอบ User: wrong_user_2 ---
+2026-04-30 19:53:22,250 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:53:27,313 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Fail)
+2026-04-30 19:53:29,398 - INFO - --- เริ่มทดสอบ User: wrong_user_3 ---
+2026-04-30 19:53:30,400 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:53:35,043 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Fail)
+2026-04-30 19:53:37,122 - INFO - --- เริ่มทดสอบ User: admin ---
+2026-04-30 19:53:38,142 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:53:43,262 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Fail)
+2026-04-30 19:53:45,348 - INFO - --- เริ่มทดสอบ User: guest ---
+2026-04-30 19:53:46,353 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:53:51,489 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Fail)
+2026-04-30 19:53:53,577 - INFO - --- เริ่มทดสอบ User: test_bot ---
+2026-04-30 19:53:54,579 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:53:59,727 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Fail)
+2026-04-30 19:54:01,806 - INFO - --- เริ่มทดสอบ User: staff_01 ---
+2026-04-30 19:54:02,312 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:54:06,899 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Fail)
+2026-04-30 19:54:08,977 - INFO - --- เริ่มทดสอบ User: tomsmith ---
+2026-04-30 19:54:09,993 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:54:15,056 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Fail)
+2026-04-30 19:54:17,140 - INFO - --- เริ่มทดสอบ User: tomsmith ---
+2026-04-30 19:54:18,143 - INFO - เปิด Browser ไปที่: https://the-internet.herokuapp.com/login
+2026-04-30 19:54:23,249 - INFO - ✅ ผลการทดสอบถูกต้องตามคาด (Pass)
