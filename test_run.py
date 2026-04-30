@@ -2,46 +2,46 @@ import pytest
 from selenium import webdriver
 from login_page import LoginPage
 import time
-import os
-import json # เพิ่มการอ่านไฟล์ JSON
+import os        # สำคัญมาก: ต้องมีบรรทัดนี้
+import json
+from dotenv import load_dotenv # สำหรับอ่านไฟล์ลับ .env
 
-# ข้อมูลทดสอบ 10 ชุด
+# โหลดค่าจากไฟล์ลับ .env
+load_dotenv()
+user_secret = os.getenv('SECRET_USER')
+pass_secret = os.getenv('SECRET_PASS')
+
+# ข้อมูลทดสอบ (ชุดแรกดึงจากไฟล์ลับ ส่วนชุดที่เหลือทดสอบกรณี Error)
 test_data = [
-    ("tomsmith", "SuperSecretPassword!", "Pass"),
+    (user_secret, pass_secret, "Pass"),
     ("user_1", "pass_1", "Fail"),
     ("user_2", "pass_2", "Fail"),
     ("user_3", "pass_3", "Fail"),
-    ("tomsmith", "SuperSecretPassword!", "Pass"),
     ("admin", "admin", "Fail"),
     ("guest", "guest", "Fail"),
     ("robot_tester", "bot123", "Fail"),
     ("testing_only", "999999", "Fail"),
-    ("tomsmith", "wrongpassword", "Pass") # แกล้งให้พัง 1 เคสเพื่อดูรูป
+    ("tomsmith", "wrongpassword", "Fail"), # แก้ให้ถูกตามความจริง
+    ("tomsmith", "SuperSecretPassword!", "Pass") 
 ]
 
 @pytest.mark.parametrize("username, password, expected", test_data)
 def test_login_process(username, password, expected):
-    # 1. อ่านค่าการตั้งค่าจากไฟล์ config.json
+    # 1. อ่าน Config
     with open('config.json') as f:
         config = json.load(f)
 
-    # 2. เตรียมโฟลเดอร์เก็บรูป
+    # 2. เตรียมโฟลเดอร์รูป
     if not os.path.exists("screenshots"):
         os.makedirs("screenshots")
 
-    # 3. เลือก Browser ตามที่ระบุใน Config
-    if config['browser'] == "chrome":
-        driver = webdriver.Chrome()
-    else:
-        # ถ้าในอนาคตอยากเพิ่ม Edge หรือ Firefox ก็มาใส่ตรงนี้ได้
-        driver = webdriver.Chrome() 
-
+    # 3. เปิด Browser
+    driver = webdriver.Chrome()
+    driver.implicitly_wait(config['timeout'])
     login = LoginPage(driver)
     
     try:
-        # 4. ดึง URL จาก Config
         driver.get(config['base_url'])
-        driver.implicitly_wait(config['timeout'])
         
         login.enter_username(username)
         login.enter_password(password)
@@ -51,7 +51,7 @@ def test_login_process(username, password, expected):
         current_url = driver.current_url
         actual_result = "Pass" if "secure" in current_url else "Fail"
 
-        # 5. ถ้าเทสพัง ให้ถ่ายรูป
+        # ถ้าผลลัพธ์ไม่ตรงกับที่คาดไว้ ให้ถ่ายรูป
         if actual_result != expected:
             screenshot_path = f"screenshots/fail_{username}.png"
             driver.save_screenshot(screenshot_path)
